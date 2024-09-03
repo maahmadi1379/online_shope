@@ -1,0 +1,24 @@
+# pycharm
+.idea
+.project
+.pydevproject
+.DS_Store
+
+# python
+**/*.pyc
+__pycache__/
+*.py[cod]
+
+# Django stuff:
+*.log
+.env
+
+# media and static
+media/
+static/
+
+# Environments
+venv/
+env/
+
+gunicorn.conf.py
