@@ -54,5 +54,5 @@ bind = '0.0.0.0:8000'  # IP and port to bind to
 #### Running Gunicorn
 To start your Django application with Gunicorn, execute the following command in your terminal:
 ```
-gunicorn todo_application.wsgi:application --config gunicorn.conf.py
+gunicorn configs.wsgi:application --config gunicorn.conf.py
 ```
