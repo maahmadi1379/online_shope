@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-from utils.otp import OTPService
-from utils.validators import validate_phone_number
+from apps.utils.otp import OTPService
+from apps.utils.validators import validate_phone_number
 
 
 class LowercaseEmailField(models.EmailField):

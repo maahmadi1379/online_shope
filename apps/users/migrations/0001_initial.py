@@ -5,8 +5,8 @@ import django.contrib.auth.models
 import django.contrib.auth.validators
 from django.db import migrations, models
 import django.utils.timezone
-import utils.otp
-import utils.validators
+import apps.utils.otp
+import apps.utils.validators
 
 
 class Migration(migrations.Migration):
@@ -24,8 +24,9 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('type', models.PositiveSmallIntegerField(choices=[(1, 'email type'), (2, 'phone number type')])),
                 ('email', apps.users.models.LowercaseEmailField(blank=True, max_length=254, null=True)),
-                ('phone_number', models.BigIntegerField(blank=True, null=True, validators=[utils.validators.PhoneNumberValidator()])),
-                ('code', models.CharField(blank=True, default=utils.otp.OTPService.generate, max_length=10, null=True)),
+                ('phone_number', models.BigIntegerField(blank=True, null=True, validators=[
+                    apps.utils.validators.PhoneNumberValidator()])),
+                ('code', models.CharField(blank=True, default=apps.utils.otp.OTPService.generate, max_length=10, null=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
             ],
         ),
@@ -43,7 +44,8 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 ('email', apps.users.models.LowercaseEmailField(blank=True, max_length=254, null=True, unique=True)),
-                ('phone_number', models.IntegerField(blank=True, null=True, unique=True, validators=[utils.validators.PhoneNumberValidator()])),
+                ('phone_number', models.IntegerField(blank=True, null=True, unique=True, validators=[
+                    apps.utils.validators.PhoneNumberValidator()])),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.group', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.permission', verbose_name='user permissions')),
             ],

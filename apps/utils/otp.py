@@ -1,6 +1,6 @@
 import random
 
-from utils.epoch import Epoch
+from apps.utils.epoch import Epoch
 
 
 class OTPService:
