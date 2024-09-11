@@ -9,6 +9,7 @@ from apps.shopping.models import (
     OrderItem,
     ProductCategories,
 )
+from apps.shopping.services.address import AddressService
 
 
 class OrderService:
@@ -23,7 +24,7 @@ class OrderService:
         order_objs = Order.objects.filter(
             user=user_obj,
             bought=False,
-        )
+        ).order_by('-created')
 
         if order_objs.exists():
             return order_objs.first()
@@ -89,15 +90,16 @@ class OrderService:
 
     @classmethod
     def buy(cls, order_obj: Order) -> Tuple[bool, str]:
-        if order_obj.address is None:
-            return False, 'address is required'
+        address_obj = AddressService.get_current_address(order_obj.user)
+        if address_obj is None:
+            return False, 'address is required, please set this.'
 
         quantity_sum = OrderItemService.get_count_of_other_products(order_obj=order_obj)
         if quantity_sum == 0:
             return False, 'can not buy any product'
 
         city_ids = OrderItemService.get_product_city_ids(order_obj=order_obj)
-        if order_obj.address.city not in city_ids:
+        if address_obj.city not in city_ids:
             return False, 'no matching city of order with products cities'
 
         order_obj.bought = True
@@ -209,6 +211,10 @@ class OrderItemService:
         order_item_obj.delete()
 
         return True
+
+    @classmethod
+    def delete_with_product(cls, product_obj: Product) -> None:
+        OrderItem.objects.filter(product=product_obj).delete()
 
     @classmethod
     def get_product_city_ids(cls, order_obj: Order) -> List[int]:
