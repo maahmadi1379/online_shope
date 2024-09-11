@@ -46,9 +46,9 @@ class OTPService:
                 phone_number=phone_number,
             )
             if otp_type == OTP.EMAIL:
-                EmailService.send(code=otp_obj.code, email=email)
+                EmailService.send_code(code=otp_obj.code, email=email)
             elif otp_type == OTP.PHONE_NUMBER:
-                SMSService.send(code=otp_obj.code, phone_number=phone_number)
+                SMSService.send_code(code=otp_obj.code, phone_number=phone_number)
 
         return int(abs(delta_time - otp_obj.created).total_seconds())
 
@@ -85,15 +85,23 @@ class OTPService:
         return None
 
 
+# TODO: add this functionality to background tasks
 class EmailService:
     @classmethod
-    def send(cls, code: str, email: str) -> None:
-        # TODO: add this functionality to background tasks
+    def send_code(cls, code: str, email: str) -> None:
         print(f'code ({code}) sent to email ({email})')
 
+    @classmethod
+    def send_transaction_factor(cls, email: str) -> None:
+        print(f'transaction sent to email ({email})')
 
+
+# TODO: add this functionality to background tasks
 class SMSService:
     @classmethod
-    def send(cls, code: str, phone_number: int) -> None:
-        # TODO: add this functionality to background tasks
+    def send_code(cls, code: str, phone_number: int) -> None:
         print(f'code ({code}) sent to phone_number ({phone_number})')
+
+    @classmethod
+    def send_transaction_factor(cls, phone_number: int) -> None:
+        print(f'transaction sent to phone_number ({phone_number})')
