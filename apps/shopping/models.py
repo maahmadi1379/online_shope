@@ -35,9 +35,10 @@ class Product(models.Model):
     description = models.TextField(null=True, blank=True)
     # TODO
     # images = ...
-    categories = models.ManyToManyField(Category, related_name='product_categories')
-    cities = models.ManyToManyField(City, related_name='product_cities')
+    cities = models.ManyToManyField(City, through='ProductCities')
+    categories = models.ManyToManyField(Category, through='ProductCategories')
     created = models.DateTimeField(auto_now_add=True)
+    deleted = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Product'
@@ -46,6 +47,16 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ProductCities(models.Model):
+    city = models.ForeignKey(City, on_delete=models.PROTECT)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+
+
+class ProductCategories(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
 
 
 class Review(models.Model):
@@ -68,6 +79,7 @@ class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT)
     text = models.TextField(null=True, blank=True)
+    is_current = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -78,6 +90,8 @@ class Address(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
+    bought = models.BooleanField(default=False)
+    reminded = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
