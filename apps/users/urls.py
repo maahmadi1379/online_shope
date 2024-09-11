@@ -10,6 +10,8 @@ from apps.users.views import (
     EmailLoginVerifyAPIView,
     PhoneNumberLoginRequestAPIView,
     PhoneNumberLoginVerifyAPIView,
+
+    UserProfileAPIView,
 )
 
 urlpatterns = [
@@ -22,4 +24,6 @@ urlpatterns = [
     path('login/email/verify/', EmailLoginVerifyAPIView.as_view(), name='login-email-verify'),
     path('login/phone-number/request/', PhoneNumberLoginRequestAPIView.as_view(), name='login-phone-number-request'),
     path('login/phone-number/verify/', PhoneNumberLoginVerifyAPIView.as_view(), name='login-phone-number-verify'),
+
+    path('profile/', UserProfileAPIView.as_view(), name='profile'),
 ]

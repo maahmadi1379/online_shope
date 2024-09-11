@@ -1,6 +1,8 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from apps.users.models import OTP
 from apps.users.serializers import (
@@ -8,10 +10,12 @@ from apps.users.serializers import (
     EmailVerifySerializers,
     PhoneNumberRequestSerializers,
     PhoneNumberVerifySerializers,
+    UserProfileSerializer,
 )
 from apps.users.services.otp import OTPService
-from apps.users.services.token import TokenService
 from apps.users.services.user import UserService
+from apps.users.services.token import TokenService
+from apps.shopping.services.order import OrderService
 
 
 class EmailRegisterRequestAPIView(APIView):
@@ -52,6 +56,8 @@ class EmailRegisterVerifyAPIView(APIView):
 
         if user_obj is None:
             return Response({'detail': 'OTP Not Exists'}, status=status.HTTP_404_NOT_FOUND)
+
+        order_obj = OrderService.create(user_obj)
 
         access, refresh = TokenService.generate(user_obj)
 
@@ -96,6 +102,8 @@ class PhoneNumberRegisterVerifyAPIView(APIView):
 
         if user_obj is None:
             return Response({'detail': 'OTP Not Exists'}, status=status.HTTP_404_NOT_FOUND)
+
+        order_obj = OrderService.create(user_obj)
 
         access, refresh = TokenService.generate(user_obj)
 
