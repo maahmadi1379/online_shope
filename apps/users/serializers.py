@@ -41,7 +41,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         )
 
     def get_order_id(self, instance):
-        order_obj = OrderService.get_current_order(instance)
+        order_obj = OrderService.get_current_user_order(instance)
 
         if order_obj is not None:
             return order_obj.id

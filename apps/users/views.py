@@ -197,4 +197,11 @@ class PhoneNumberLoginVerifyAPIView(APIView):
 
         return Response({'refresh': refresh, 'access': access}, status=status.HTTP_200_OK)
 
-# Create your views here.
+
+class UserProfileAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserProfileSerializer(instance=request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
