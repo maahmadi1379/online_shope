@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-from apps.utils.otp import OTPService
 from apps.utils.validators import validate_phone_number
 
 
@@ -22,8 +21,9 @@ class LowercaseEmailField(models.EmailField):
 
 
 class User(AbstractUser):
+    password = models.CharField(max_length=128, null=True, blank=True)
     email = LowercaseEmailField(unique=True, null=True, blank=True)
-    phone_number = models.IntegerField(unique=True, null=True, blank=True, validators=[validate_phone_number])
+    phone_number = models.BigIntegerField(unique=True, null=True, blank=True, validators=[validate_phone_number])
 
     class Meta:
         verbose_name = 'User'
@@ -43,5 +43,5 @@ class OTP(models.Model):
     type = models.PositiveSmallIntegerField(choices=OTP_TYPE_CHOICES)
     email = LowercaseEmailField(null=True, blank=True)
     phone_number = models.BigIntegerField(null=True, blank=True, validators=[validate_phone_number])
-    code = models.CharField(default=OTPService.generate, max_length=10, null=True, blank=True)
+    code = models.CharField(max_length=10)
     created = models.DateTimeField(auto_now_add=True)
