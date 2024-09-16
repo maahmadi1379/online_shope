@@ -308,6 +308,35 @@ class CreateProductSerializer(serializers.Serializer):
         return valid_data
 
 
+class QueryParamsListProductSerializer(serializers.Serializer):
+    search = serializers.CharField(required=False)
+    city_id = serializers.IntegerField(required=False)
+    category = serializers.IntegerField(required=False)
+
+    def validate(self, data):
+        valid_data = {}
+
+        search = data.get('search', None)
+        if search is not None:
+            valid_data['search'] = search
+
+        city_id = data.get('city_id', None)
+        if city_id is not None:
+            city_obj = CityService.detail(city_id=city_id)
+            if not city_obj:
+                raise serializers.ValidationError(f'"city_id" Not Found')
+            valid_data['city_obj'] = city_obj
+
+        category_id = data.get('category_id', None)
+        if category_id is not None:
+            category_obj = CategoryService.detail(category_id=category_id)
+            if not category_obj:
+                raise serializers.ValidationError(f'"category_id" Not Found')
+            valid_data['category_obj'] = category_obj
+
+        return valid_data
+
+
 class ListProductSerializer(serializers.ModelSerializer):
     cities = serializers.SerializerMethodField()
     categories = serializers.SerializerMethodField()

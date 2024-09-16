@@ -15,6 +15,9 @@ from apps.shopping.views import (
     UpdateDeleteCategoryAPIView,
 
     AddListReviewAPIView,
+
+    CreateListProductAPIView,
+    DetailUpdateDeleteProductAPIView,
 )
 
 urlpatterns = [
@@ -32,4 +35,7 @@ urlpatterns = [
     path('category/<int:category_id>/', UpdateDeleteCategoryAPIView.as_view(), name="update-delete-category"),
 
     path('review/', AddListReviewAPIView.as_view(), name="create-list-review"),
+
+    path('product/', CreateListProductAPIView.as_view(), name="create-list-product"),
+    path('product/<int:product_id>/', DetailUpdateDeleteProductAPIView.as_view(), name="update-delete-product"),
 ]

@@ -26,10 +26,12 @@ from apps.shopping.serializers import (
     UpdateCategorySerializer,
 
     AddReviewSerializer,
+    ListReviewSerializer,
 
     CreateProductSerializer,
     DetailProductSerializer,
-    ListReviewSerializer,
+    ListProductSerializer,
+    QueryParamsListProductSerializer,
 )
 from apps.shopping.services.city import CityService
 from apps.shopping.services.order import OrderService
@@ -441,27 +443,31 @@ class CreateListProductAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def get(self, request):
+        serializer = QueryParamsListProductSerializer(data=request.query_params)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         parameters = {}
 
-        search = request.query_params.get('search', None)
+        search = serializer.validated_data.get('search', None)
         if search is not None:
             parameters['title__icontains'] = search
 
-        # TODO: add this filters
-        # city_id = request.query_params.get('city_id', None)
-        # if city_id is not None:
-        #     parameters['city_id'] = city_id
-        #
-        # category_id = request.query_params.get('category_id', None)
-        # if category_id is not None:
-        #     parameters['category_id'] = category_id
+        city_obj = serializer.validated_data.get('city_obj', None)
+        if city_obj is not None:
+            parameters['productcities__city'] = city_obj
 
-        orders_objs = ProductService.list(parameters=parameters)
+        category_obj = serializer.validated_data.get('category_obj', None)
+        if category_obj is not None:
+            parameters['productcategories__category'] = category_obj
+
+        products_objs = ProductService.list(parameters=parameters)
 
         paginator = CustomPageNumberPagination()
-        paginated_orders_objs = paginator.paginate_queryset(orders_objs, request)
+        paginated_products_objs = paginator.paginate_queryset(products_objs, request)
 
-        serializer = ListOrderSerializer(paginated_orders_objs, many=True)
+        serializer = ListProductSerializer(paginated_products_objs, many=True)
 
         return paginator.get_paginated_response(serializer.data)
 
