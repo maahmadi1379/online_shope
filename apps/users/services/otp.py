@@ -1,12 +1,14 @@
 import random
-from datetime import timedelta, datetime
 from typing import Optional
+from datetime import timedelta, datetime
 
 from django.utils import timezone
 
-from apps.users.models import OTP, User
 from apps.utils.epoch import Epoch
+from apps.users.models import OTP, User
+from apps.users.services.sms import SMSService
 from apps.users.services.user import UserService
+from apps.users.services.email import EmailService
 
 
 class OTPService:
@@ -83,25 +85,3 @@ class OTPService:
             return user_obj
 
         return None
-
-
-# TODO: add this functionality to background tasks
-class EmailService:
-    @classmethod
-    def send_code(cls, code: str, email: str) -> None:
-        print(f'code ({code}) sent to email ({email})')
-
-    @classmethod
-    def send_transaction_factor(cls, email: str) -> None:
-        print(f'transaction sent to email ({email})')
-
-
-# TODO: add this functionality to background tasks
-class SMSService:
-    @classmethod
-    def send_code(cls, code: str, phone_number: int) -> None:
-        print(f'code ({code}) sent to phone_number ({phone_number})')
-
-    @classmethod
-    def send_transaction_factor(cls, phone_number: int) -> None:
-        print(f'transaction sent to phone_number ({phone_number})')
