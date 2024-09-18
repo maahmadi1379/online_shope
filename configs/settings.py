@@ -135,3 +135,23 @@ STATIC_ROOT = config('STATIC_ROOT')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+# Cache & Queues
+CACHE_LOCATION = config('CACHE_LOCATION', default='redis://localhost:6379/0')
+if CACHE_LOCATION is None:
+    raise ValueError('CACHE_LOCATION not provided.')
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'KEY_PREFIX': config('CACHE_KEY_PREFIX', default='online_shop'),
+        'LOCATION': config('CACHE_LOCATION', default='redis://localhost:6379/0'),
+        'TIMEOUT': config('CACHE_TIMEOUT', default=None),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    },
+}
+
+CELERY_BROKER_URL = CACHE_LOCATION
+CELERY_RESULT_BACKEND = CACHE_LOCATION

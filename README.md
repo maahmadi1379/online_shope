@@ -1,5 +1,5 @@
 # Online Shopping application
-This project demonstrates a Django REST Framework application connected to a PostgreSQL database. It features CRUD operations, Postman documentation for API exploration, and is prepared for deployment with Gunicorn.
+This project demonstrates a Django REST Framework application connected to a PostgreSQL database. It features CRUD operations, Postman documentation for API exploration, and is prepared for deployment with Gunicorn and use async tasks in application with Celery.
 
 ## Table of Contents
 - Prerequisites
@@ -55,4 +55,10 @@ bind = '0.0.0.0:8000'  # IP and port to bind to
 To start your Django application with Gunicorn, execute the following command in your terminal:
 ```
 gunicorn configs.wsgi:application --config gunicorn.conf.py
+```
+#### Running Celery
+To use async tasks in your application with Celery, execute the following commands in two terminal:
+```
+celery -A configs worker -l info
+celery -A configs beat -l info
 ```
